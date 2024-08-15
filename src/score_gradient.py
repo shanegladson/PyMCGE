@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.typing import NDArray
 
 from src.cost_function import CostFunction
 from src.distribution import Distribution
@@ -16,14 +17,15 @@ class ScoreGradient:
         self.cost: CostFunction = cost
         self.dist: Distribution = dist
 
-    def eval_integrand(self, x: np.ndarray, cost_params: np.ndarray, dist_params: np.ndarray) -> np.ndarray:
+    def eval_integrand(self, x: NDArray[np.float64], cost_params: NDArray[np.float64],
+                       dist_params: NDArray[np.float64]) -> NDArray[np.float64]:
         """
         Returns the score function integrand.
-        :param np.ndarray x: Randomly sampled value
-        :param np.ndarray cost_params: Structural parameters for cost function
-        :param np.ndarray dist_params: Structural parameters for distribution function
+        :param NDArray x: Randomly sampled value
+        :param NDArray cost_params: Structural parameters for cost function
+        :param NDArray dist_params: Structural parameters for distribution function
         :return: Product of cost, density, and gradient of log-density
         """
         return (self.cost.eval_cost(x, cost_params) *
-                self.dist.eval_dist(x, dist_params) *
+                self.dist.eval_density(x, dist_params) *
                 self.dist.eval_grad_log(x, dist_params))
