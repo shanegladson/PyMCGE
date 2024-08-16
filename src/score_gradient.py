@@ -30,8 +30,8 @@ class ScoreGradient:
                 self.dist.eval_density(x, dist_params) *
                 self.dist.eval_grad_log(x, dist_params))
 
-    def mc_grad_estimate(self, n_samp: int, lb: NDArray[np.float64], ub: NDArray[np.float64],
-                         dist_params: NDArray[np.float64]) -> NDArray[np.float64]:
+    def mc_grad_expectation(self, n_samp: int, lb: NDArray[np.float64], ub: NDArray[np.float64],
+                            dist_params: NDArray[np.float64]) -> NDArray[np.float64]:
         """
         Uses traditional Monte Carlo to estimate the gradient of the
         objective function.
@@ -42,9 +42,31 @@ class ScoreGradient:
         :return: Array of estimated gradients
         """
         n_col = dist_params.size
-        gradient_estimates: NDArray[np.float64]
         random_data: NDArray[np.float64] = np.random.uniform(lb, ub, size=(n_samp, n_col))
-        gradient_estimates = np.apply_along_axis(partial(self.eval_integrand, dist_params=dist_params), axis=1, arr=random_data)
+        gradient_estimates = np.apply_along_axis(partial(self.eval_integrand, dist_params=dist_params),
+                                                 axis=1, arr=random_data)
 
         return np.mean(gradient_estimates, axis=1)
 
+    def mc_grad_estimate_from_dist(self, n_samp: int, dist_params: NDArray[np.float64]) -> NDArray[np.float64]:
+        """
+        Uses traditional Monte Carlo to estimate the gradient of the
+        objective function.
+        :param int n_samp: Number of samples
+        :param NDArray[np.float64] lb: Lower bound for uniform samples
+        :param NDArray[np.float64] ub: Upper bound for uniform samples
+        :param NDArray dist_params: Structural parameters for distribution function
+        :return: Array of estimated gradients
+        """
+        # Sample from the given distribution
+        samples: NDArray[np.float64] = self.dist.generate_samples([n_samp], dist_params)
+        if len(samples.shape) == 1:
+            samples = samples[:, np.newaxis]
+        # Compute the gradient of the log-density for each observation
+        grad_log: NDArray[np.float64] = np.apply_along_axis(partial(self.dist.eval_grad_log, struct_params=dist_params),
+                                                            axis=1, arr=samples)
+        # Compute the cost for each observation
+        cost: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=samples)
+        # Combine the gradient with the cost
+        gradient_estimates = grad_log * cost[:, np.newaxis]
+        return np.mean(gradient_estimates, axis=0)
