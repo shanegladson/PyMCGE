@@ -1,4 +1,5 @@
 import numpy as np
+from numpy._typing import ArrayLike
 from numpy.typing import NDArray
 
 from src.distribution import Distribution
@@ -10,7 +11,7 @@ class UnivariateUniformDistribution(Distribution):
         """
         Returns the density where the structural parameters are a
         tuple of (a, b) where a and b correspond to lower/upper
-        boudns respectively.
+        bounds respectively.
         :param NDArray x: Point at which to evaluate the density
         :param NDArray struct_params: Tuple of bounds given as (a,b)
         :return: Density
@@ -62,3 +63,11 @@ class UnivariateUniformDistribution(Distribution):
     @staticmethod
     def generate_initial_guess() -> NDArray[np.float64]:
         return np.array([0., 1.], dtype=np.float64)
+
+    @staticmethod
+    def generate_samples(shape: ArrayLike | int, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
+        a = struct_params[0]
+        b = struct_params[1]
+        shape = np.asarray(shape, dtype=int)
+        samples: NDArray[np.float64] = UnivariateUniformDistribution.rng.uniform(a, b, shape)
+        return np.asarray(samples, dtype=np.float64)
