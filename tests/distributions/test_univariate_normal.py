@@ -39,6 +39,13 @@ class TestUnivariateNormal(unittest.TestCase):
         true_log_grad2: NDArray[np.float64] = np.array([-0.5, -0.125], dtype=np.float64)
         assert_allclose(log_grad2, true_log_grad2)
 
+    def test_normal_sample(self) -> None:
+        sample1: NDArray[np.float64] = UnivariateNormalDistribution.generate_samples([1], self.params1)
+        self.assertIsNotNone(sample1)
+
+        sample2: NDArray[np.float64] = UnivariateNormalDistribution.generate_samples([1], self.params2)
+        self.assertIsNotNone(sample2)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -72,6 +72,15 @@ class TestUnivariateUniform(unittest.TestCase):
         true_log_grad4: NDArray[np.float64] = np.array([np.NAN, np.NAN], dtype=np.float64)
         assert_allclose(log_grad4, true_log_grad4)
 
+    def test_uniform_sample(self) -> None:
+        sample1: NDArray[np.float64] = UnivariateUniformDistribution.generate_samples([1], self.params1)
+        self.assertGreaterEqual(sample1, self.params1[0])
+        self.assertLessEqual(sample1, self.params1[1])
+
+        sample2: NDArray[np.float64] = UnivariateUniformDistribution.generate_samples([1], self.params2)
+        self.assertGreaterEqual(sample2, self.params2[0])
+        self.assertLessEqual(sample2, self.params2[1])
+
 
 if __name__ == '__main__':
     unittest.main()
