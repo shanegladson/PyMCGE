@@ -1,6 +1,5 @@
 import numpy as np
-from numpy._typing import ArrayLike
-from numpy.typing import NDArray
+from numpy.typing import NDArray, ArrayLike
 
 from src.distribution import Distribution
 
