@@ -1,3 +1,5 @@
+from functools import partial
+
 import numpy as np
 from numpy.typing import NDArray
 
@@ -29,3 +31,23 @@ class ScoreGradient:
         return (self.cost.eval_cost(x, cost_params) *
                 self.dist.eval_density(x, dist_params) *
                 self.dist.eval_grad_log(x, dist_params))
+
+    def mc_grad_estimate(self, n_samp: int, lb: NDArray[np.float64], ub: NDArray[np.float64],
+                         cost_params: NDArray[np.float64], dist_params: NDArray[np.float64]) -> NDArray[np.float64]:
+        """
+        Uses traditional Monte Carlo to estimate the gradient of the
+        objective function.
+        :param int n_samp: Number of samples
+        :param NDArray[np.float64] lb: Lower bound for uniform samples
+        :param NDArray[np.float64] ub: Upper bound for uniform samples
+        :param NDArray[np.float64] cost_params: Structural parameters for cost function
+        :param NDArray dist_params: Structural parameters for distribution function
+        :return: Array of estimated gradients
+        """
+        n_col = dist_params.size
+        gradient_estimates: NDArray[np.float64]
+        random_data: NDArray[np.float64] = np.random.uniform(lb, ub, size=(n_samp, n_col))
+        gradient_estimates = np.apply_along_axis(partial(self.eval_integrand, cost_params=cost_params, dist_params=dist_params), axis=1, arr=random_data)
+
+        return np.mean(gradient_estimates, axis=1)
+

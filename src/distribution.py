@@ -16,3 +16,7 @@ class Distribution(ABC):
     @staticmethod
     def eval_grad_log(x: NDArray[np.float64], struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
         raise NotImplementedError('Analytic gradient of log-distribution must be provided!')
+
+    @staticmethod
+    def generate_initial_guess() -> NDArray[np.float64]:
+        raise NotImplementedError('Must return a valid initial guess with the correct dimension!')

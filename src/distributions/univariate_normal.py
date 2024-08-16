@@ -35,3 +35,7 @@ class UnivariateNormalDistribution(Distribution):
         dpdmu = (x - mu) / sigma_sq
         dpdsigma_sq = -0.5 / sigma_sq + 0.5 / (sigma_sq ** 2) * (x - mu) ** 2
         return np.array([dpdmu, dpdsigma_sq], dtype=np.float64)
+
+    @staticmethod
+    def generate_initial_guess() -> NDArray[np.float64]:
+        return np.array([0., 1.], dtype=np.float64)
