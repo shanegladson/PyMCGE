@@ -5,27 +5,30 @@ from src.cost_function import CostFunction
 
 
 class LinearCost(CostFunction):
-    @staticmethod
-    def eval_cost(x: NDArray, struct_params: np.ndarray) -> np.float64:
+
+    def __init__(self, struct_params: NDArray[np.float64]) -> None:
+        """
+        Takes as input the coefficients and intercepts for the cost.
+        :param struct_params: (n, 2) array of structural parameters
+        """
+        super().__init__(struct_params)
+        self.coeff: NDArray[np.float64] = struct_params[0]
+        self.intercept: NDArray[np.float64] = struct_params[1]
+
+    def eval_cost(self, x: NDArray[np.float64]) -> np.float64:
         """
         Evaluates the cost as ax+b. If x is an array, the sum of each
         cost is returned.
         :param NDArray x: 1D array of input parameters (length n)
-        :param struct_params: (n, 2) array of structural parameters
         :return: Scalar cost
         """
-        a = struct_params[:, 0]
-        b = struct_params[:, 1]
-        return np.sum(a * x + b, dtype=np.float64)
+        return np.sum(self.coeff * x + self.intercept, dtype=np.float64)
 
-    @staticmethod
-    def eval_grad(x: NDArray[np.float64], struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
+    def eval_grad(self, x: NDArray[np.float64]) -> NDArray[np.float64]:
         """
         Evaluates the gradient of cost. If x is an array, the sum of each
         cost is returned.
         :param NDArray x: 1D array of input parameters (length n)
-        :param struct_params: (n, 2) array of structural parameters
         :return: Gradient of cost for each element in x
         """
-        a = struct_params[:, 0]
-        return a
+        return self.coeff
