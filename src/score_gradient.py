@@ -7,6 +7,7 @@ from numpy.typing import NDArray
 from src.cost_function import CostFunction
 from src.distribution import Distribution
 from src.enums import ControlVariate
+from src.gradient.gradient import Gradient
 
 class ScoreGradient:
     def __init__(self, cost: CostFunction, dist: Distribution) -> None:
@@ -49,7 +50,8 @@ class ScoreGradient:
 
         return np.mean(gradient_estimates, axis=1)
 
-    def mc_grad_estimate_from_dist(self, n_samp: int, dist_params: NDArray[np.float64], beta: Union[ControlVariate, float] = ControlVariate.NONE) -> NDArray[np.float64]:
+    def mc_grad_estimate_from_dist(self, n_samp: int, dist_params: NDArray[np.float64],
+                                   beta: Union[ControlVariate, float] = ControlVariate.NONE) -> Gradient:
         """
         Uses traditional Monte Carlo to estimate the gradient of the
         objective function. 
@@ -70,7 +72,11 @@ class ScoreGradient:
         adjusted_cost: NDArray[np.float64] = self.adjust_for_cv(cost, beta)
         # Combine the gradient with the cost
         gradient_estimates = grad_log * adjusted_cost[:, np.newaxis]
-        return np.mean(gradient_estimates, axis=0)
+
+        # TODO: Add support for computing the variance
+
+        gradient: Gradient = Gradient(np.mean(gradient_estimates, axis=0), None, n_samp)
+        return gradient
 
     def adjust_for_cv(self, cost: NDArray[np.float64], beta: Union[ControlVariate, float]) -> NDArray[np.float64]:
         """

@@ -8,6 +8,7 @@ from src.cost.quadratic_cost import QuadraticCost
 from src.distributions.univariate_normal import UnivariateNormalDistribution
 from src.score_gradient import ScoreGradient
 from src.enums import ControlVariate
+from src.gradient.gradient import Gradient
 
 
 class TestScoreGradient(unittest.TestCase):
@@ -34,15 +35,16 @@ class TestScoreGradient(unittest.TestCase):
         assert_allclose(score, true_score)
 
     def test_score_gradient_monte_carlo(self) -> None:
-        gradient: NDArray[np.float64] = self.score_grad.mc_grad_estimate_from_dist(100000, self.distparams1)
-        self.assertIsNotNone(gradient)
-        self.assertEqual(gradient.size, 2)
+        mc_gradient: Gradient = self.score_grad.mc_grad_estimate_from_dist(100000, self.distparams1)
+        self.assertIsNotNone(mc_gradient.gradient)
+        self.assertEqual(mc_gradient.gradient.size, 2)
 
     def test_score_gradient_monte_carlo_cv(self) -> None:
-        cv_gradient: NDArray[np.float64] = self.score_grad.mc_grad_estimate_from_dist(1000, self.distparams1, 10.)
-        self.assertIsNotNone(cv_gradient)
-        self.assertEqual(cv_gradient.size, 2)
+        cv_gradient: Gradient = self.score_grad.mc_grad_estimate_from_dist(1000, self.distparams1, 10.)
+        self.assertIsNotNone(cv_gradient.gradient)
+        self.assertEqual(cv_gradient.gradient.size, 2)
 
-        cv_gradient1: NDArray[np.float64] = self.score_grad.mc_grad_estimate_from_dist(1000, self.distparams1, ControlVariate.AVERAGE)
-        self.assertIsNotNone(cv_gradient1)
-        self.assertEqual(cv_gradient1.size, 2)
+        cv_gradient1: Gradient = self.score_grad.mc_grad_estimate_from_dist(1000, self.distparams1, ControlVariate.AVERAGE)
+        self.assertIsNotNone(cv_gradient1.gradient)
+        self.assertEqual(cv_gradient1.gradient.size, 2)
+
