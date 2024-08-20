@@ -45,7 +45,7 @@ class UnivariateNormalDistribution(Distribution):
     def generate_samples(shape: ArrayLike, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
         mu = struct_params[0]
         sigma_sq = struct_params[1]
-        sigma: np.float64 = np.float64(np.sqrt(sigma_sq))
+        sigma: np.float64 = np.sqrt(sigma_sq, dtype=np.float64)
         shape = np.asarray(shape, dtype=int)
         samples: NDArray[np.float64] = UnivariateNormalDistribution.rng.normal(mu, sigma, shape)
         return np.asarray(samples, dtype=np.float64)
