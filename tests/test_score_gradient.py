@@ -5,7 +5,7 @@ from numpy.typing import NDArray
 from numpy.testing import assert_allclose
 
 from src.cost.quadratic_cost import QuadraticCost
-from src.distributions.univariate_normal import UnivariateNormalDistribution
+from src.enums import DistributionType
 from src.score_gradient import ScoreGradient
 from src.enums import ControlVariate
 from src.gradient.gradient import Gradient
@@ -15,7 +15,7 @@ class TestScoreGradient(unittest.TestCase):
     x1: NDArray[np.float64]
     costparams1: NDArray[np.float64]
     distparams1: NDArray[np.float64]
-    dist: UnivariateNormalDistribution
+    dist: DistributionType
     cost: QuadraticCost
     score_grad: ScoreGradient
 
@@ -24,7 +24,7 @@ class TestScoreGradient(unittest.TestCase):
         cls.x1 = np.array([1.], dtype=np.float64)
         cls.costparams1 = np.array([1., 0., 0.], dtype=np.float64)
         cls.distparams1 = np.array([1., 1.], dtype=np.float64)
-        cls.dist = UnivariateNormalDistribution()
+        cls.dist = DistributionType.NORMAL
         cls.cost = QuadraticCost(cls.costparams1)
         cls.score_grad = ScoreGradient(cls.cost, cls.dist)
 
