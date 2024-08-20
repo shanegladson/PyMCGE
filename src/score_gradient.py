@@ -32,24 +32,6 @@ class ScoreGradient:
                 self.dist.eval_density(x, dist_params) *
                 self.dist.eval_grad_log(x, dist_params))
 
-    def mc_grad_expectation(self, n_samp: int, lb: NDArray[np.float64], ub: NDArray[np.float64],
-                            dist_params: NDArray[np.float64]) -> NDArray[np.float64]:
-        """
-        Uses traditional Monte Carlo to estimate the gradient of the
-        objective function.
-        :param int n_samp: Number of samples
-        :param NDArray[np.float64] lb: Lower bound for uniform samples
-        :param NDArray[np.float64] ub: Upper bound for uniform samples
-        :param NDArray dist_params: Structural parameters for distribution function
-        :return: Array of estimated gradients
-        """
-        n_col = dist_params.size
-        random_data: NDArray[np.float64] = np.random.uniform(lb, ub, size=(n_samp, n_col))
-        gradient_estimates = np.apply_along_axis(partial(self.eval_integrand, dist_params=dist_params),
-                                                 axis=1, arr=random_data)
-
-        return np.mean(gradient_estimates, axis=1)
-
     def mc_grad_estimate_from_dist(self, n_samp: int, dist_params: NDArray[np.float64],
                                    beta: Union[ControlVariate, float] = ControlVariate.NONE) -> Gradient:
         """
@@ -60,22 +42,23 @@ class ScoreGradient:
         :param Union[ControlVariate | float] beta: Control variate parameter to be used
         :return: Array of estimated gradients
         """
-        # Sample from the given distribution
         samples: NDArray[np.float64] = self.dist.generate_samples([n_samp], dist_params)
         if len(samples.shape) == 1:
             samples = samples[:, np.newaxis]
-        # Compute the gradient of the log-density for each observation
+
         grad_log: NDArray[np.float64] = np.apply_along_axis(partial(self.dist.eval_grad_log, struct_params=dist_params),
                                                             axis=1, arr=samples)
-        # Compute the cost for each observation
+
         cost: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=samples)
         adjusted_cost: NDArray[np.float64] = self.adjust_for_cv(cost, beta)
-        # Combine the gradient with the cost
+
         gradient_estimates = grad_log * adjusted_cost[:, np.newaxis]
+        gradient_estimates_mean = np.mean(gradient_estimates, axis=0)
 
-        # TODO: Add support for computing the variance
+        variance_estimate = np.mean(np.power(gradient_estimates, 2), axis=0) - np.power(gradient_estimates_mean, 2)
+        variance_estimate = np.divide(variance_estimate, n_samp, dtype=np.float64)
 
-        gradient: Gradient = Gradient(np.mean(gradient_estimates, axis=0), None, n_samp)
+        gradient: Gradient = Gradient(gradient_estimates_mean, variance_estimate, n_samp)
         return gradient
 
     def adjust_for_cv(self, cost: NDArray[np.float64], beta: Union[ControlVariate, float]) -> NDArray[np.float64]:
