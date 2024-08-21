@@ -4,7 +4,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from src.cost_function import CostFunction
-from src.distribution import Distribution
+from src._distributions._distribution import _Distribution
 from src.enums import ControlVariate, DistributionType
 from src.helper_functions import get_distribution_from_type
 from src.gradient.gradient import Gradient
@@ -20,7 +20,7 @@ class ScoreGradient:
         """
         self.cost: CostFunction = cost
         self.dist_type: DistributionType = dist_type
-        self.dist: Distribution = get_distribution_from_type(self.dist_type)
+        self.dist: _Distribution = get_distribution_from_type(self.dist_type)
 
     def eval_integrand(self, x: NDArray[np.float64], dist_params: NDArray[np.float64]) -> NDArray[np.float64]:
         """

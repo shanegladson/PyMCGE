@@ -3,9 +3,8 @@ import unittest
 import numpy as np
 from numpy.testing import assert_allclose
 from numpy.typing import NDArray
-from scipy.stats import norm  # type: ignore
 
-from src.distributions.univariate_uniform import UnivariateUniformDistribution
+from src.distributions import UnivariateUniformDistribution
 
 
 class TestUnivariateUniform(unittest.TestCase):

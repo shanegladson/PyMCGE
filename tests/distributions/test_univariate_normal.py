@@ -5,7 +5,7 @@ from numpy.testing import assert_allclose
 from numpy.typing import NDArray
 from scipy.stats import norm  # type: ignore
 
-from src.distributions.univariate_normal import UnivariateNormalDistribution
+from src.distributions import UnivariateNormalDistribution
 
 
 class TestUnivariateNormal(unittest.TestCase):
@@ -21,11 +21,11 @@ class TestUnivariateNormal(unittest.TestCase):
 
     def test_normal_density(self) -> None:
         density1: np.float64 = UnivariateNormalDistribution.eval_density(self.x1, self.params1)
-        true_density1: np.float64 = norm.pdf(self.x1, loc=self.params1[0], scale=np.sqrt(self.params1[1]))
+        true_density1 = norm.pdf(self.x1, loc=self.params1[0], scale=np.sqrt(self.params1[1]))
         assert_allclose(density1, true_density1)
 
         density2: np.float64 = UnivariateNormalDistribution.eval_density(self.x1, self.params2)
-        true_density2: np.float64 = norm.pdf(self.x1, loc=self.params2[0], scale=np.sqrt(self.params2[1]))
+        true_density2 = norm.pdf(self.x1, loc=self.params2[0], scale=np.sqrt(self.params2[1]))
         assert_allclose(density2, true_density2)
 
     def test_normal_log_grad(self) -> None:

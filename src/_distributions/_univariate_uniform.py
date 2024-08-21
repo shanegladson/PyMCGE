@@ -2,10 +2,10 @@ import numpy as np
 from numpy._typing import ArrayLike
 from numpy.typing import NDArray
 
-from src.distribution import Distribution
+from src._distributions._distribution import _Distribution
 
 
-class UnivariateUniformDistribution(Distribution):
+class _UnivariateUniformDistribution(_Distribution):
     @staticmethod
     def eval_density(x: NDArray[np.float64], struct_params: NDArray[np.float64]) -> np.float64:
         """
@@ -17,7 +17,7 @@ class UnivariateUniformDistribution(Distribution):
         :return: Density
         """
         x_i: np.float64 = np.float64(x[0])
-        a, b = UnivariateUniformDistribution.get_parameters(struct_params)
+        a, b = _UnivariateUniformDistribution.get_parameters(struct_params)
         
         if a <= x_i <= b:
             return np.float64(1 / (b - a))
@@ -33,7 +33,7 @@ class UnivariateUniformDistribution(Distribution):
         :return: Tuple of grad(a, b)
         """
         x_i: np.float64 = np.float64(x[0])
-        a, b = UnivariateUniformDistribution.get_parameters(struct_params)
+        a, b = _UnivariateUniformDistribution.get_parameters(struct_params)
         
         if a <= x_i <= b:
             dpda = np.power(b - a, -2)
@@ -51,7 +51,7 @@ class UnivariateUniformDistribution(Distribution):
         :return: Tuple of grad log (a, b)
         """
         x_i: np.float64 = np.float64(x[0])
-        a, b = UnivariateUniformDistribution.get_parameters(struct_params)
+        a, b = _UnivariateUniformDistribution.get_parameters(struct_params)
 
         if a <= x_i <= b:
             dlogpda = np.power(b - a, -1)
@@ -66,10 +66,10 @@ class UnivariateUniformDistribution(Distribution):
 
     @staticmethod
     def generate_samples(shape: ArrayLike | int, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
-        a, b = UnivariateUniformDistribution.get_parameters(struct_params)
+        a, b = _UnivariateUniformDistribution.get_parameters(struct_params)
 
         shape = np.asarray(shape, dtype=int)
-        samples: NDArray[np.float64] = UnivariateUniformDistribution.rng.uniform(a, b, shape)
+        samples: NDArray[np.float64] = _UnivariateUniformDistribution.rng.uniform(a, b, shape)
 
         return np.asarray(samples, dtype=np.float64)
 
