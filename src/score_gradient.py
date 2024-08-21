@@ -1,5 +1,4 @@
 from functools import partial
-from typing import Union
 
 import numpy as np
 from numpy.typing import NDArray
@@ -35,13 +34,13 @@ class ScoreGradient:
                 self.dist.eval_grad_log(x, dist_params))
 
     def mc_grad_estimate_from_dist(self, n_samp: int, dist_params: NDArray[np.float64],
-                                   beta: Union[ControlVariate, float] = ControlVariate.NONE) -> Gradient:
+                                   beta: ControlVariate | float = ControlVariate.NONE) -> Gradient:
         """
         Uses traditional Monte Carlo to estimate the gradient of the
         objective function. 
         :param int n_samp: Number of samples
         :param NDArray dist_params: Structural parameters for distribution function
-        :param Union[ControlVariate | float] beta: Control variate parameter to be used
+        :param ControlVariate | float beta: Control variate parameter to be used
         :return: Array of estimated gradients
         """
         samples: NDArray[np.float64] = self.dist.generate_samples([n_samp], dist_params)
@@ -63,11 +62,11 @@ class ScoreGradient:
         gradient: Gradient = Gradient(gradient_estimates_mean, variance_estimate, n_samp)
         return gradient
 
-    def adjust_for_cv(self, cost: NDArray[np.float64], beta: Union[ControlVariate, float]) -> NDArray[np.float64]:
+    def adjust_for_cv(self, cost: NDArray[np.float64], beta: ControlVariate | float) -> NDArray[np.float64]:
         """
         Subtracts the control variate parameter to give the adjusted cost.
         :param NDArray[np.float64] cost: Numpy array of costs for each sample
-        :param Union[ControlVariate | float] beta: Parameter to be used in control variate adjustment
+        :param ControlVariate | float beta: Parameter to be used in control variate adjustment
         :return: Numpy array of adjusted costs
         """
         cv_param: float
