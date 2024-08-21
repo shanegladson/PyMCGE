@@ -4,7 +4,7 @@ import numpy as np
 from numpy.typing import NDArray, ArrayLike
 
 
-class Distribution(ABC):
+class _Distribution(ABC):
 
     rng: np.random.Generator = np.random.default_rng()
 

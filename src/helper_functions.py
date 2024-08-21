@@ -1,10 +1,10 @@
-from src.distribution import Distribution
-from src.distributions.univariate_normal import UnivariateNormalDistribution
-from src.distributions.univariate_uniform import UnivariateUniformDistribution
-from src.distributions.univariate_maxwell import UnivariateDSMaxwellDistribution
+from src._distributions._distribution import _Distribution
+from src.distributions import UnivariateNormalDistribution
+from src.distributions import UnivariateUniformDistribution
+from src.distributions import UnivariateDSMaxwellDistribution
 from src.enums import DistributionType
 
-def get_distribution_from_type(dist_type: DistributionType) -> Distribution:
+def get_distribution_from_type(dist_type: DistributionType) -> _Distribution:
     match dist_type:
         case DistributionType.UNIFORM:
             return UnivariateUniformDistribution()

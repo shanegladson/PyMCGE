@@ -1,6 +1,5 @@
 from enum import Enum
 
-from src.distribution import Distribution
 class ControlVariate(Enum):
     NONE = 0
     AVERAGE = 1

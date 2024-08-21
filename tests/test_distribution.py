@@ -2,10 +2,10 @@ import unittest
 
 import numpy as np
 
-from src.distribution import Distribution
+from src._distributions._distribution import _Distribution
 
 
-class BlankDistribution(Distribution):
+class BlankDistribution(_Distribution):
     pass
 
 

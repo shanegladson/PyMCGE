@@ -1,10 +1,10 @@
 import numpy as np
 from numpy.typing import NDArray, ArrayLike
 
-from src.distribution import Distribution
+from src._distributions._distribution import _Distribution
 
 
-class UnivariateWeibullDistribution(Distribution):
+class _UnivariateWeibullDistribution(_Distribution):
     
     @staticmethod
     def eval_density(x: NDArray[np.float64], struct_params: NDArray[np.float64]) -> np.float64:
@@ -17,7 +17,7 @@ class UnivariateWeibullDistribution(Distribution):
         :return: Density of Weibull distribution at point x
         """
         x_i: np.float64 = np.float64(x[0])
-        alpha, beta = UnivariateWeibullDistribution.get_parameters(struct_params)
+        alpha, beta = _UnivariateWeibullDistribution.get_parameters(struct_params)
 
         exp_term: np.float64 = np.exp(-beta * np.power(x_i, alpha))
         density: np.float64 = alpha * beta * np.power(x_i, alpha - 1) * exp_term
@@ -34,7 +34,7 @@ class UnivariateWeibullDistribution(Distribution):
         :return: Tuple as grad(alpha, beta)
         """
         x_i: np.float64 = np.float64(x[0])
-        alpha, beta = UnivariateWeibullDistribution.get_parameters(struct_params)
+        alpha, beta = _UnivariateWeibullDistribution.get_parameters(struct_params)
 
         dpdalpha = 1. / alpha + np.log(x_i) - alpha * beta * np.power(x_i, alpha - 1.)
         dpdbeta = 1. / beta - np.power(x_i, alpha)
@@ -47,10 +47,10 @@ class UnivariateWeibullDistribution(Distribution):
 
     @staticmethod
     def generate_samples(shape: ArrayLike, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
-        alpha, beta = UnivariateWeibullDistribution.get_parameters(struct_params)
+        alpha, beta = _UnivariateWeibullDistribution.get_parameters(struct_params)
         shape = np.asarray(shape, dtype=int)
 
-        samples: NDArray[np.float64] = UnivariateWeibullDistribution.rng.weibull(alpha, size=shape)
+        samples: NDArray[np.float64] = _UnivariateWeibullDistribution.rng.weibull(alpha, size=shape)
         samples /= beta
 
         return np.asarray(samples, dtype=np.float64)
