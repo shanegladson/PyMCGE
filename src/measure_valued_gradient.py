@@ -5,8 +5,7 @@ from numpy.typing import NDArray
 
 from src.cost_function import CostFunction
 from src._distributions._distribution import _Distribution
-from src.distributions import UnivariateDSMaxwellDistribution
-from src.distributions import UnivariateWeibullDistribution
+from src.distributions import *
 from src.enums import DistributionType
 from src.gradient.gradient import Gradient
 from src.helper_functions import get_distribution_from_type
@@ -20,7 +19,6 @@ class MeasureValuedGradient:
         :param CostFunction cost: Derived class with parent CostFunction
         :param DistributionType dist: Derived class with parent Distribution
         """
-
         self.cost: CostFunction = cost
         self.dist_type: DistributionType = dist_type
         # TODO: This member variable may not be needed
@@ -32,17 +30,31 @@ class MeasureValuedGradient:
         :param int n_samp: Number of samples
         :param NDArray dist_params: Structural parameters for distribution function
         """
-        pos_samp, neg_samp = self._generate_mvg_samples(n_samp, dist_params)
-        const: np.float64 = self._get_mvg_constant(dist_params)
+        if self.dist_type != DistributionType.NORMAL:
+            pos_samp, neg_samp = self._generate_mvg_samples(n_samp, dist_params)
+            const: np.float64 = self._get_mvg_constant(dist_params)[0]
 
-        pos_cost: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=pos_samp)
-        neg_cost: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=neg_samp)
+            pos_cost: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=pos_samp)
+            neg_cost: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=neg_samp)
 
-        gradient_estimate = const * np.mean(pos_cost - neg_cost, axis=0)
+            gradient_estimate = const * np.mean(pos_cost - neg_cost, axis=0)
+        else:
+            pos_samp_mu, neg_samp_mu, pos_samp_sigma_sq, neg_samp_sigma_sq = self._generate_mvg_samples(n_samp, dist_params)
+            const_mu, const_sigma_sq = self._get_mvg_constant(dist_params)
+            
+            pos_cost_mu: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=pos_samp_mu)
+            neg_cost_mu: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=neg_samp_mu)
+
+            pos_cost_sigma_sq: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=pos_samp_sigma_sq)
+            neg_cost_sigma_sq: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=neg_samp_sigma_sq)
+
+            gradient_estimate_mu = const_mu * np.mean(pos_cost_mu - neg_cost_mu, axis=0)
+            gradient_estimate_sigma_sq = const_sigma_sq * np.mean(pos_cost_sigma_sq - neg_cost_sigma_sq, axis=0)
+            gradient_estimate = np.array([gradient_estimate_mu, gradient_estimate_sigma_sq], dtype=np.float64)
 
         return Gradient(gradient_estimate)
 
-    def _generate_mvg_samples(self, n_samp: int, dist_params: NDArray[np.float64]) -> Tuple[NDArray[np.float64], NDArray[np.float64]]:
+    def _generate_mvg_samples(self, n_samp: int, dist_params: NDArray[np.float64]) -> tuple[NDArray[np.float64], ...]:
         """
         Generates samples for use in the measure-valued gradient method
         according to the input distribution. Samples are returned as
@@ -50,31 +62,41 @@ class MeasureValuedGradient:
         :param int n_samp: Number of samples to be generated
         :param NDArray[np.float64] dist_params: Parameters to be used in the distribution
         """
-        pos_samp: NDArray[np.float64]
-        neg_samp: NDArray[np.float64]
         match self.dist_type:
             case DistributionType.NORMAL:
-                mu = dist_params[0]
-                sigma_sq = dist_params[1]
+                mu, sigma_sq = UnivariateNormalDistribution.get_parameters(dist_params)
                 sigma = np.sqrt(sigma_sq)
-                maxwell_params: NDArray[np.float64] = np.array([2., 0.5], dtype=np.float64)
-                pos_samp = mu + sigma * UnivariateWeibullDistribution.generate_samples([n_samp], maxwell_params)
-                neg_samp = mu - sigma * UnivariateWeibullDistribution.generate_samples([n_samp], maxwell_params)
-                return (pos_samp, neg_samp)
+                
+                weibull_params: NDArray[np.float64] = np.array([2., 0.5], dtype=np.float64)
+                pos_samp_mu = mu + sigma * UnivariateWeibullDistribution.generate_samples([n_samp], weibull_params)
+                neg_samp_mu = mu - sigma * UnivariateWeibullDistribution.generate_samples([n_samp], weibull_params)
+
+                sigma_sq_params = np.array([mu, sigma_sq], dtype=np.float64)
+                pos_samp_sigma_sq = UnivariateDSMaxwellDistribution.generate_samples([n_samp], sigma_sq_params)
+                neg_samp_sigma_sq = UnivariateNormalDistribution.generate_samples([n_samp], sigma_sq_params)
+
+                return (pos_samp_mu, neg_samp_mu, pos_samp_sigma_sq, neg_samp_sigma_sq)
             case _:
                 raise NotImplementedError('Not currently supported!')
         
-    def _get_mvg_constant(self, dist_params: NDArray[np.float64]) -> np.float64:
+    def _get_mvg_constant(self, dist_params: NDArray[np.float64]) -> NDArray[np.float64]:
         """
         Gets the constant associated with the measure-valued gradient according
         to the input parameters and underlying distribution.
         :param NDArray[np.float64] dist_params: Parameter distribution
         """
-        const: np.float64
+        const: NDArray[np.float64] = np.empty(2, dtype=np.float64)
         match self.dist_type:
             case DistributionType.NORMAL:
-                sigma_sq: np.float64 = dist_params[0]
-                const = 1. / np.sqrt(2. * sigma_sq * np.pi, dtype=np.float64)
+                _, sigma_sq = UnivariateNormalDistribution.get_parameters(dist_params)
+                sigma = np.sqrt(sigma_sq, dtype=np.float64)
+                const[0] = 1. / np.sqrt(2. * sigma_sq * np.pi, dtype=np.float64)
+                const[1] = 1. / sigma
+            case DistributionType.POISSON:
+                const[0] = np.float64(1.)
+            case DistributionType.WEIBULL:
+                _, beta = UnivariateWeibullDistribution.get_parameters(dist_params)
+                const[0] = np.float64(1. / beta)
             case _:
                 raise NotImplementedError('Distribution type not supported!')
         return const

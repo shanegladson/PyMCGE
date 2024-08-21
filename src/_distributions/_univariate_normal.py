@@ -16,8 +16,7 @@ class _UnivariateNormalDistribution(_Distribution):
         :return: Density of normal distribution at point x
         """
         x_i: np.float64 = np.float64(x[0])
-        mu = struct_params[0]
-        sigma_sq = struct_params[1]
+        mu, sigma_sq = _UnivariateNormalDistribution.get_parameters(struct_params)
         density = np.power(2 * np.pi * sigma_sq, -0.5) * np.exp(-0.5 * ((x_i - mu) ** 2) / sigma_sq)
         return density
 
