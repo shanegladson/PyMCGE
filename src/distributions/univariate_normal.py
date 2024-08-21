@@ -15,10 +15,10 @@ class UnivariateNormalDistribution(Distribution):
         :param NDArray struct_params: Numpy array of (mu, sigma_sq)
         :return: Density of normal distribution at point x
         """
-        x = x[0]
+        x_i: np.float64 = np.float64(x[0])
         mu = struct_params[0]
         sigma_sq = struct_params[1]
-        density = np.power(2 * np.pi * sigma_sq, -0.5) * np.exp(-0.5 * ((x - mu) ** 2) / sigma_sq)
+        density = np.power(2 * np.pi * sigma_sq, -0.5) * np.exp(-0.5 * ((x_i - mu) ** 2) / sigma_sq)
         return density
 
     @staticmethod
@@ -30,11 +30,12 @@ class UnivariateNormalDistribution(Distribution):
         :param NDArray struct_params: Tuple of (mu, sigma_sq)
         :return: Tuple as grad(mu, sigma_sq)
         """
-        x = x[0]
-        mu = struct_params[0]
-        sigma_sq = struct_params[1]
-        dpdmu = (x - mu) / sigma_sq
-        dpdsigma_sq = -0.5 / sigma_sq + 0.5 / (sigma_sq ** 2) * (x - mu) ** 2
+        x_i: np.float64 = np.float64(x[0])
+        mu, sigma_sq = UnivariateNormalDistribution.get_parameters(struct_params)
+        
+        dpdmu = (x_i - mu) / sigma_sq
+        dpdsigma_sq = -0.5 / sigma_sq + 0.5 / (sigma_sq ** 2) * (x_i - mu) ** 2
+
         return np.array([dpdmu, dpdsigma_sq], dtype=np.float64)
 
     @staticmethod
@@ -43,9 +44,17 @@ class UnivariateNormalDistribution(Distribution):
 
     @staticmethod
     def generate_samples(shape: ArrayLike, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
-        mu = struct_params[0]
-        sigma_sq = struct_params[1]
+        mu, sigma_sq = UnivariateNormalDistribution.get_parameters(struct_params)
+
         sigma: np.float64 = np.sqrt(sigma_sq, dtype=np.float64)
         shape = np.asarray(shape, dtype=int)
         samples: NDArray[np.float64] = UnivariateNormalDistribution.rng.normal(mu, sigma, shape)
+
         return np.asarray(samples, dtype=np.float64)
+
+    @staticmethod
+    def get_parameters(struct_params: NDArray[np.float64]) -> tuple[np.float64, ...]:
+        mu: np.float64 = np.float64(struct_params[0])
+        sigma_sq: np.float64 = np.float64(struct_params[1])
+        return mu, sigma_sq
+

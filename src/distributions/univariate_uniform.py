@@ -16,10 +16,10 @@ class UnivariateUniformDistribution(Distribution):
         :param NDArray struct_params: Tuple of bounds given as (a,b)
         :return: Density
         """
-        x = x[0]
-        a = struct_params[0]
-        b = struct_params[1]
-        if a <= x <= b:
+        x_i: np.float64 = np.float64(x[0])
+        a, b = UnivariateUniformDistribution.get_parameters(struct_params)
+        
+        if a <= x_i <= b:
             return np.float64(1 / (b - a))
         else:
             return np.float64(0.)
@@ -32,10 +32,10 @@ class UnivariateUniformDistribution(Distribution):
         :param NDArray struct_params: Structural parameters
         :return: Tuple of grad(a, b)
         """
-        x = x[0]
-        a = struct_params[0]
-        b = struct_params[1]
-        if a <= x <= b:
+        x_i: np.float64 = np.float64(x[0])
+        a, b = UnivariateUniformDistribution.get_parameters(struct_params)
+        
+        if a <= x_i <= b:
             dpda = np.power(b - a, -2)
             dpdb = -np.power(b - a, -2)
             return np.array([dpda, dpdb], dtype=np.float64)
@@ -50,10 +50,10 @@ class UnivariateUniformDistribution(Distribution):
         :param struct_params: Structural parameters
         :return: Tuple of grad log (a, b)
         """
-        x = x[0]
-        a = struct_params[0]
-        b = struct_params[1]
-        if a <= x <= b:
+        x_i: np.float64 = np.float64(x[0])
+        a, b = UnivariateUniformDistribution.get_parameters(struct_params)
+
+        if a <= x_i <= b:
             dlogpda = np.power(b - a, -1)
             dlogpdb = -np.power(b - a, -1)
             return np.array([dlogpda, dlogpdb], dtype=np.float64)
@@ -66,8 +66,16 @@ class UnivariateUniformDistribution(Distribution):
 
     @staticmethod
     def generate_samples(shape: ArrayLike | int, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
-        a = struct_params[0]
-        b = struct_params[1]
+        a, b = UnivariateUniformDistribution.get_parameters(struct_params)
+
         shape = np.asarray(shape, dtype=int)
         samples: NDArray[np.float64] = UnivariateUniformDistribution.rng.uniform(a, b, shape)
+
         return np.asarray(samples, dtype=np.float64)
+
+    @staticmethod
+    def get_parameters(struct_params: NDArray[np.float64]) -> tuple[np.float64, ...]:
+        a: np.float64 = np.float64(struct_params[0])
+        b: np.float64 = np.float64(struct_params[1])
+        return a, b
+        

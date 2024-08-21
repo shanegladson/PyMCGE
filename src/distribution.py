@@ -27,3 +27,8 @@ class Distribution(ABC):
     @staticmethod
     def generate_samples(shape: ArrayLike, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
         raise NotImplementedError('The distribution must be able to provide its own samples of arbitrary shape!')
+
+    @staticmethod
+    def get_parameters(struct_params: NDArray[np.float64]) -> tuple[np.float64, ...]:
+        raise NotImplementedError('The method must be implemented to return all relevant parameters!')
+
