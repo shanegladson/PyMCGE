@@ -1,5 +1,3 @@
-from typing import Tuple
-
 import numpy as np
 from numpy.typing import NDArray
 
@@ -67,7 +65,7 @@ class MeasureValuedGradient:
                 mu, sigma_sq = UnivariateNormalDistribution.get_parameters(dist_params)
                 sigma = np.sqrt(sigma_sq)
                 
-                weibull_params: NDArray[np.float64] = np.array([2., 0.5], dtype=np.float64)
+                weibull_params = np.array([2., 0.5], dtype=np.float64)
                 pos_samp_mu = mu + sigma * UnivariateWeibullDistribution.generate_samples([n_samp], weibull_params)
                 neg_samp_mu = mu - sigma * UnivariateWeibullDistribution.generate_samples([n_samp], weibull_params)
 
@@ -75,7 +73,28 @@ class MeasureValuedGradient:
                 pos_samp_sigma_sq = UnivariateDSMaxwellDistribution.generate_samples([n_samp], sigma_sq_params)
                 neg_samp_sigma_sq = UnivariateNormalDistribution.generate_samples([n_samp], sigma_sq_params)
 
-                return (pos_samp_mu, neg_samp_mu, pos_samp_sigma_sq, neg_samp_sigma_sq)
+                return pos_samp_mu, neg_samp_mu, pos_samp_sigma_sq, neg_samp_sigma_sq
+            case DistributionType.WEIBULL:
+                alpha, beta = UnivariateWeibullDistribution.get_parameters(dist_params)
+
+                weibull_params = np.array([alpha, beta], dtype=np.float64)
+                pos_samp = UnivariateWeibullDistribution.generate_samples([n_samp], weibull_params)
+
+                gamma_params: NDArray[np.float64] = np.array([2., beta], dtype=np.float64)
+                neg_samp = UnivariateGammaDistribution.generate_samples([n_samp], gamma_params)
+                neg_samp = np.power(neg_samp, 1. / alpha, dtype=np.float64)
+
+                return pos_samp, neg_samp
+            case DistributionType.GAMMA:
+                alpha, beta = UnivariateGammaDistribution.get_parameters(dist_params)
+                
+                pos_gamma_params = np.array([alpha, beta], dtype=np.float64)
+                pos_samp = UnivariateGammaDistribution.generate_samples([n_samp], pos_gamma_params)
+
+                neg_gamma_params = np.array([alpha + 1, beta], dtype=np.float64)
+                neg_samp = UnivariateGammaDistribution.generate_samples([n_samp], neg_gamma_params)
+
+                return pos_samp, neg_samp
             case _:
                 raise NotImplementedError('Not currently supported!')
         
@@ -84,6 +103,7 @@ class MeasureValuedGradient:
         Gets the constant associated with the measure-valued gradient according
         to the input parameters and underlying distribution.
         :param NDArray[np.float64] dist_params: Parameter distribution
+        :return: Array of constants
         """
         const: NDArray[np.float64] = np.empty(2, dtype=np.float64)
         match self.dist_type:
@@ -97,6 +117,9 @@ class MeasureValuedGradient:
             case DistributionType.WEIBULL:
                 _, beta = UnivariateWeibullDistribution.get_parameters(dist_params)
                 const[0] = np.float64(1. / beta)
+            case DistributionType.GAMMA:
+                alpha, beta = UnivariateGammaDistribution.get_parameters(dist_params)
+                const[0] = np.float64(alpha / beta)
             case _:
                 raise NotImplementedError('Distribution type not supported!')
         return const
