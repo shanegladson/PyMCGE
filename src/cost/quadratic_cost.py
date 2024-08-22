@@ -5,7 +5,6 @@ from src.cost_function import CostFunction
 
 
 class QuadraticCost(CostFunction):
-
     def __init__(self, struct_params: NDArray) -> None:
         """
         Takes as input the (n, 3) array of structural parameters
@@ -22,7 +21,7 @@ class QuadraticCost(CostFunction):
         :param NDArray x: 1D array of input parameters (length n)
         :return: Scalar cost
         """
-        return np.sum(self.a * x ** 2 + self.b * x + self.c, dtype=np.float64)
+        return np.sum(self.a * x**2 + self.b * x + self.c, dtype=np.float64)
 
     def eval_grad(self, x: NDArray[np.float64]) -> NDArray[np.float64]:
         """

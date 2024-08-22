@@ -24,5 +24,5 @@ class TestCostFunction(unittest.TestCase):
             self.cost.eval_grad(np.zeros(1))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

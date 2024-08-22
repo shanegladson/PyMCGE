@@ -21,5 +21,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Auto format the code
+black src tests --line-length 120
+if [ $? -ne 0 ]; then
+	echo "Formatting with black failed!"
+	exit 1 
+fi
+
 echo "All checks passed successfully!"
 

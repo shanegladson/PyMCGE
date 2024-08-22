@@ -5,6 +5,7 @@ from src.distributions import UnivariateDSMaxwellDistribution
 from src.distributions import UnivariateWeibullDistribution
 from src.enums import DistributionType
 
+
 def get_distribution_from_type(dist_type: DistributionType) -> _Distribution:
     match dist_type:
         case DistributionType.UNIFORM:
@@ -16,4 +17,4 @@ def get_distribution_from_type(dist_type: DistributionType) -> _Distribution:
         case DistributionType.WEIBULL:
             return UnivariateWeibullDistribution()
         case _:
-            raise NotImplementedError('Distribution not yet supported!')
+            raise NotImplementedError("Distribution not yet supported!")

@@ -18,11 +18,11 @@ class _UnivariateUniformDistribution(_Distribution):
         """
         x_i: np.float64 = np.float64(x[0])
         a, b = _UnivariateUniformDistribution.get_parameters(struct_params)
-        
+
         if a <= x_i <= b:
             return np.float64(1 / (b - a))
         else:
-            return np.float64(0.)
+            return np.float64(0.0)
 
     @staticmethod
     def eval_grad(x: NDArray[np.float64], struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
@@ -34,13 +34,13 @@ class _UnivariateUniformDistribution(_Distribution):
         """
         x_i: np.float64 = np.float64(x[0])
         a, b = _UnivariateUniformDistribution.get_parameters(struct_params)
-        
+
         if a <= x_i <= b:
             dpda = np.power(b - a, -2)
             dpdb = -np.power(b - a, -2)
             return np.array([dpda, dpdb], dtype=np.float64)
         else:
-            return np.array([0., 0.], dtype=np.float64)
+            return np.array([0.0, 0.0], dtype=np.float64)
 
     @staticmethod
     def eval_grad_log(x: NDArray[np.float64], struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
@@ -62,7 +62,7 @@ class _UnivariateUniformDistribution(_Distribution):
 
     @staticmethod
     def generate_initial_guess() -> NDArray[np.float64]:
-        return np.array([0., 1.], dtype=np.float64)
+        return np.array([0.0, 1.0], dtype=np.float64)
 
     @staticmethod
     def generate_samples(shape: ArrayLike | int, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
@@ -78,4 +78,3 @@ class _UnivariateUniformDistribution(_Distribution):
         a: np.float64 = np.float64(struct_params[0])
         b: np.float64 = np.float64(struct_params[1])
         return a, b
-        

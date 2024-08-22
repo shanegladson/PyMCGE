@@ -5,7 +5,6 @@ from src.cost_function import CostFunction
 
 
 class LinearCost(CostFunction):
-
     def __init__(self, struct_params: NDArray[np.float64]) -> None:
         """
         Takes as input the coefficients and intercepts for the cost.
