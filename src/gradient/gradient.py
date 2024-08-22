@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-import numpy as np 
+import numpy as np
 from numpy.typing import NDArray
 
 
@@ -12,7 +12,7 @@ class Gradient:
 
     def __post_init__(self) -> None:
         if not isinstance(self.gradient, np.ndarray):
-            raise TypeError('Gradient must be of type NDArray[np.float64]!')
+            raise TypeError("Gradient must be of type NDArray[np.float64]!")
 
         if not isinstance(self.variance, np.ndarray):
-            raise TypeError('Variance must be of type NDArray[np.float64]!')
+            raise TypeError("Variance must be of type NDArray[np.float64]!")

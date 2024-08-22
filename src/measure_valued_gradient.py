@@ -8,6 +8,7 @@ from src.enums import DistributionType
 from src.gradient.gradient import Gradient
 from src.helper_functions import get_distribution_from_type
 
+
 class MeasureValuedGradient:
     def __init__(self, cost: CostFunction, dist_type: DistributionType) -> None:
         """
@@ -37,14 +38,20 @@ class MeasureValuedGradient:
 
             gradient_estimate = const * np.mean(pos_cost - neg_cost, axis=0)
         else:
-            pos_samp_mu, neg_samp_mu, pos_samp_sigma_sq, neg_samp_sigma_sq = self._generate_mvg_samples(n_samp, dist_params)
+            pos_samp_mu, neg_samp_mu, pos_samp_sigma_sq, neg_samp_sigma_sq = self._generate_mvg_samples(
+                n_samp, dist_params
+            )
             const_mu, const_sigma_sq = self._get_mvg_constant(dist_params)
-            
+
             pos_cost_mu: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=pos_samp_mu)
             neg_cost_mu: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=neg_samp_mu)
 
-            pos_cost_sigma_sq: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=pos_samp_sigma_sq)
-            neg_cost_sigma_sq: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=neg_samp_sigma_sq)
+            pos_cost_sigma_sq: NDArray[np.float64] = np.apply_along_axis(
+                self.cost.eval_cost, axis=1, arr=pos_samp_sigma_sq
+            )
+            neg_cost_sigma_sq: NDArray[np.float64] = np.apply_along_axis(
+                self.cost.eval_cost, axis=1, arr=neg_samp_sigma_sq
+            )
 
             gradient_estimate_mu = const_mu * np.mean(pos_cost_mu - neg_cost_mu, axis=0)
             gradient_estimate_sigma_sq = const_sigma_sq * np.mean(pos_cost_sigma_sq - neg_cost_sigma_sq, axis=0)
@@ -64,8 +71,8 @@ class MeasureValuedGradient:
             case DistributionType.NORMAL:
                 mu, sigma_sq = UnivariateNormalDistribution.get_parameters(dist_params)
                 sigma = np.sqrt(sigma_sq)
-                
-                weibull_params = np.array([2., 0.5], dtype=np.float64)
+
+                weibull_params = np.array([2.0, 0.5], dtype=np.float64)
                 pos_samp_mu = mu + sigma * UnivariateWeibullDistribution.generate_samples([n_samp], weibull_params)
                 neg_samp_mu = mu - sigma * UnivariateWeibullDistribution.generate_samples([n_samp], weibull_params)
 
@@ -80,14 +87,14 @@ class MeasureValuedGradient:
                 weibull_params = np.array([alpha, beta], dtype=np.float64)
                 pos_samp = UnivariateWeibullDistribution.generate_samples([n_samp], weibull_params)
 
-                gamma_params: NDArray[np.float64] = np.array([2., beta], dtype=np.float64)
+                gamma_params: NDArray[np.float64] = np.array([2.0, beta], dtype=np.float64)
                 neg_samp = UnivariateGammaDistribution.generate_samples([n_samp], gamma_params)
-                neg_samp = np.power(neg_samp, 1. / alpha, dtype=np.float64)
+                neg_samp = np.power(neg_samp, 1.0 / alpha, dtype=np.float64)
 
                 return pos_samp, neg_samp
             case DistributionType.GAMMA:
                 alpha, beta = UnivariateGammaDistribution.get_parameters(dist_params)
-                
+
                 pos_gamma_params = np.array([alpha, beta], dtype=np.float64)
                 pos_samp = UnivariateGammaDistribution.generate_samples([n_samp], pos_gamma_params)
 
@@ -96,8 +103,8 @@ class MeasureValuedGradient:
 
                 return pos_samp, neg_samp
             case _:
-                raise NotImplementedError('Not currently supported!')
-        
+                raise NotImplementedError("Not currently supported!")
+
     def _get_mvg_constant(self, dist_params: NDArray[np.float64]) -> NDArray[np.float64]:
         """
         Gets the constant associated with the measure-valued gradient according
@@ -110,17 +117,16 @@ class MeasureValuedGradient:
             case DistributionType.NORMAL:
                 _, sigma_sq = UnivariateNormalDistribution.get_parameters(dist_params)
                 sigma = np.sqrt(sigma_sq, dtype=np.float64)
-                const[0] = 1. / np.sqrt(2. * sigma_sq * np.pi, dtype=np.float64)
-                const[1] = 1. / sigma
+                const[0] = 1.0 / np.sqrt(2.0 * sigma_sq * np.pi, dtype=np.float64)
+                const[1] = 1.0 / sigma
             case DistributionType.POISSON:
-                const[0] = np.float64(1.)
+                const[0] = np.float64(1.0)
             case DistributionType.WEIBULL:
                 _, beta = UnivariateWeibullDistribution.get_parameters(dist_params)
-                const[0] = np.float64(1. / beta)
+                const[0] = np.float64(1.0 / beta)
             case DistributionType.GAMMA:
                 alpha, beta = UnivariateGammaDistribution.get_parameters(dist_params)
                 const[0] = np.float64(alpha / beta)
             case _:
-                raise NotImplementedError('Distribution type not supported!')
+                raise NotImplementedError("Distribution type not supported!")
         return const
-

@@ -9,6 +9,7 @@ from src.enums import ControlVariate, DistributionType
 from src.helper_functions import get_distribution_from_type
 from src.gradient.gradient import Gradient
 
+
 class ScoreGradient:
     def __init__(self, cost: CostFunction, dist_type: DistributionType) -> None:
         """
@@ -29,15 +30,14 @@ class ScoreGradient:
         :param NDArray dist_params: Structural parameters for distribution function
         :return: Product of cost, density, and gradient of log-density
         """
-        return (self.cost.eval_cost(x) *
-                self.dist.eval_density(x, dist_params) *
-                self.dist.eval_grad_log(x, dist_params))
+        return self.cost.eval_cost(x) * self.dist.eval_density(x, dist_params) * self.dist.eval_grad_log(x, dist_params)
 
-    def mc_grad_estimate_from_dist(self, n_samp: int, dist_params: NDArray[np.float64],
-                                   beta: ControlVariate | float = ControlVariate.NONE) -> Gradient:
+    def mc_grad_estimate_from_dist(
+        self, n_samp: int, dist_params: NDArray[np.float64], beta: ControlVariate | float = ControlVariate.NONE
+    ) -> Gradient:
         """
         Uses traditional Monte Carlo to estimate the gradient of the
-        objective function. 
+        objective function.
         :param int n_samp: Number of samples
         :param NDArray dist_params: Structural parameters for distribution function
         :param ControlVariate | float beta: Control variate parameter to be used
@@ -47,8 +47,9 @@ class ScoreGradient:
         if len(samples.shape) == 1:
             samples = samples[:, np.newaxis]
 
-        grad_log: NDArray[np.float64] = np.apply_along_axis(partial(self.dist.eval_grad_log, struct_params=dist_params),
-                                                            axis=1, arr=samples)
+        grad_log: NDArray[np.float64] = np.apply_along_axis(
+            partial(self.dist.eval_grad_log, struct_params=dist_params), axis=1, arr=samples
+        )
 
         cost: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=samples)
         adjusted_cost: NDArray[np.float64] = self.adjust_for_cv(cost, beta)
@@ -76,9 +77,8 @@ class ScoreGradient:
             elif beta == ControlVariate.AVERAGE:
                 cv_param = cost.mean()
             else:
-                raise NotImplementedError('Unknown control variate enum used!')
+                raise NotImplementedError("Unknown control variate enum used!")
         else:
             cv_param = beta
         adjusted_cost: NDArray[np.float64] = cost - cv_param
         return adjusted_cost
-

@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 from numpy.typing import NDArray, ArrayLike
 from scipy.stats import maxwell  # type: ignore
 
@@ -6,7 +6,6 @@ from src._distributions._distribution import _Distribution
 
 
 class _UnivariateDSMaxwellDistribution(_Distribution):
-    
     @staticmethod
     def eval_density(x: NDArray[np.float64], struct_params: NDArray[np.float64]) -> np.float64:
         """
@@ -21,8 +20,8 @@ class _UnivariateDSMaxwellDistribution(_Distribution):
         mu, sigma_sq = _UnivariateDSMaxwellDistribution.get_parameters(struct_params)
         sigma = np.sqrt(sigma_sq, dtype=np.float64)
 
-        diff_sq: np.float64 = np.power(x_i - mu, 2., dtype=np.float64)
-        density = diff_sq * np.exp(-0.5 * diff_sq / sigma_sq) / (np.power(sigma, 3.) * np.sqrt(2 * np.pi))
+        diff_sq: np.float64 = np.power(x_i - mu, 2.0, dtype=np.float64)
+        density = diff_sq * np.exp(-0.5 * diff_sq / sigma_sq) / (np.power(sigma, 3.0) * np.sqrt(2 * np.pi))
 
         return np.float64(density)
 
@@ -37,15 +36,15 @@ class _UnivariateDSMaxwellDistribution(_Distribution):
         """
         x_i: np.float64 = np.float64(x[0])
         mu, sigma_sq = _UnivariateDSMaxwellDistribution.get_parameters(struct_params)
-        
+
         dpdmu = (x_i - mu) / sigma_sq - 2 / (x_i - mu)
-        dpdsigma_sq = 0.5 * np.power(x_i - mu, 2.) / np.power(sigma_sq, 2.) - 0.5 * 3. / sigma_sq
+        dpdsigma_sq = 0.5 * np.power(x_i - mu, 2.0) / np.power(sigma_sq, 2.0) - 0.5 * 3.0 / sigma_sq
 
         return np.array([dpdmu, dpdsigma_sq], dtype=np.float64)
 
     @staticmethod
     def generate_initial_guess() -> NDArray[np.float64]:
-        return np.array([0., 1.], dtype=np.float64)
+        return np.array([0.0, 1.0], dtype=np.float64)
 
     @staticmethod
     def generate_samples(shape: ArrayLike, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:

@@ -15,9 +15,9 @@ class TestUnivariateNormal(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.x1 = np.array([0.], dtype=np.float64)
-        cls.params1 = np.array([0., 1.], dtype=np.float64)
-        cls.params2 = np.array([1., 2.], dtype=np.float64)
+        cls.x1 = np.array([0.0], dtype=np.float64)
+        cls.params1 = np.array([0.0, 1.0], dtype=np.float64)
+        cls.params2 = np.array([1.0, 2.0], dtype=np.float64)
 
     def test_normal_density(self) -> None:
         density1: np.float64 = UnivariateNormalDistribution.eval_density(self.x1, self.params1)
@@ -31,7 +31,7 @@ class TestUnivariateNormal(unittest.TestCase):
     def test_normal_log_grad(self) -> None:
         log_grad1: NDArray[np.float64] = UnivariateNormalDistribution.eval_grad_log(self.x1, self.params1)
         # This is computed analytically
-        true_log_grad1: NDArray[np.float64] = np.array([0., -0.5], dtype=np.float64)
+        true_log_grad1: NDArray[np.float64] = np.array([0.0, -0.5], dtype=np.float64)
         assert_allclose(log_grad1, true_log_grad1)
 
         log_grad2: NDArray[np.float64] = UnivariateNormalDistribution.eval_grad_log(self.x1, self.params2)
@@ -47,5 +47,5 @@ class TestUnivariateNormal(unittest.TestCase):
         self.assertIsNotNone(sample2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
