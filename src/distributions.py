@@ -4,6 +4,7 @@ from src._distributions._univariate_uniform import _UnivariateUniformDistributio
 from src._distributions._univariate_weibull import _UnivariateWeibullDistribution
 from src._distributions._univariate_gamma import _UnivariateGammaDistribution
 from src._distributions._univariate_exponential import _UnivariateExponentialDistribution
+from src._distributions._univariate_poisson import _UnivariatePoissonDistribution
 
 
 class UnivariateUniformDistribution(_UnivariateUniformDistribution):
@@ -25,5 +26,10 @@ class UnivariateWeibullDistribution(_UnivariateWeibullDistribution):
 class UnivariateGammaDistribution(_UnivariateGammaDistribution):
     pass
 
+
 class UnivariateExponentialDistribution(_UnivariateExponentialDistribution):
+    pass
+
+
+class UnivariatePoissonDistribution(_UnivariatePoissonDistribution):
     pass
