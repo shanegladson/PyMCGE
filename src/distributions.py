@@ -3,6 +3,7 @@ from src._distributions._univariate_maxwell import _UnivariateDSMaxwellDistribut
 from src._distributions._univariate_uniform import _UnivariateUniformDistribution
 from src._distributions._univariate_weibull import _UnivariateWeibullDistribution
 from src._distributions._univariate_gamma import _UnivariateGammaDistribution
+from src._distributions._univariate_exponential import _UnivariateExponentialDistribution
 
 
 class UnivariateUniformDistribution(_UnivariateUniformDistribution):
@@ -22,4 +23,7 @@ class UnivariateWeibullDistribution(_UnivariateWeibullDistribution):
 
 
 class UnivariateGammaDistribution(_UnivariateGammaDistribution):
+    pass
+
+class UnivariateExponentialDistribution(_UnivariateExponentialDistribution):
     pass
