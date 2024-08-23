@@ -1,8 +1,8 @@
 import numpy as np
 from numpy.typing import NDArray
 
-from src.cost_function import CostFunction
 from src._distributions._distribution import _Distribution
+from src.cost_function import CostFunction
 from src.distributions import *
 from src.enums import DistributionType
 from src.gradient.gradient import Gradient

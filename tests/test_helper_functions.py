@@ -1,8 +1,8 @@
 import unittest
 
-from src.helper_functions import get_distribution_from_type
-from src.enums import DistributionType
 from src.distributions import *
+from src.enums import DistributionType
+from src.helper_functions import get_distribution_from_type
 
 
 class TestDistributionFromType(unittest.TestCase):

@@ -1,7 +1,7 @@
 from abc import ABC
 
 import numpy as np
-from numpy.typing import NDArray, ArrayLike
+from numpy.typing import ArrayLike, NDArray
 
 
 class _Distribution(ABC):

@@ -3,6 +3,21 @@
 # Activate the virtual environment if using one
 # source venv/bin/activate
 
+echo "Organizing imports..."
+isort .
+if [ $? -ne 0 ]; then
+	echo "Formatting with isort failed!"
+	exit 1 
+fi
+
+echo "Running auto formatter..."
+# Auto format the code
+black src tests --line-length 120
+if [ $? -ne 0 ]; then
+	echo "Formatting with black failed!"
+	exit 1 
+fi
+
 echo "Running unit tests..."
 python -m unittest discover -s tests
 
@@ -19,13 +34,6 @@ mypy .
 if [ $? -ne 0 ]; then
     echo "Static typing check failed!"
     exit 1
-fi
-
-# Auto format the code
-black src tests --line-length 120
-if [ $? -ne 0 ]; then
-	echo "Formatting with black failed!"
-	exit 1 
 fi
 
 echo "All checks passed successfully!"

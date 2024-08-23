@@ -1,8 +1,10 @@
 from src._distributions._distribution import _Distribution
-from src.distributions import UnivariateNormalDistribution
-from src.distributions import UnivariateUniformDistribution
-from src.distributions import UnivariateDSMaxwellDistribution
-from src.distributions import UnivariateWeibullDistribution
+from src.distributions import (
+    UnivariateDSMaxwellDistribution,
+    UnivariateNormalDistribution,
+    UnivariateUniformDistribution,
+    UnivariateWeibullDistribution,
+)
 from src.enums import DistributionType
 
 

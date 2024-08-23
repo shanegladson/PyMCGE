@@ -1,14 +1,13 @@
 import unittest
 
 import numpy as np
-from numpy.typing import NDArray
 from numpy.testing import assert_allclose
+from numpy.typing import NDArray
 
 from src.cost.quadratic_cost import QuadraticCost
-from src.enums import DistributionType
-from src.score_gradient import ScoreGradient
-from src.enums import ControlVariate
+from src.enums import ControlVariate, DistributionType
 from src.gradient.gradient import Gradient
+from src.score_gradient import ScoreGradient
 
 
 class TestScoreGradient(unittest.TestCase):

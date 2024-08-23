@@ -3,11 +3,11 @@ from functools import partial
 import numpy as np
 from numpy.typing import NDArray
 
-from src.cost_function import CostFunction
 from src._distributions._distribution import _Distribution
+from src.cost_function import CostFunction
 from src.enums import ControlVariate, DistributionType
-from src.helper_functions import get_distribution_from_type
 from src.gradient.gradient import Gradient
+from src.helper_functions import get_distribution_from_type
 
 
 class ScoreGradient:

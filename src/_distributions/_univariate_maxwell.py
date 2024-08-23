@@ -1,5 +1,5 @@
 import numpy as np
-from numpy.typing import NDArray, ArrayLike
+from numpy.typing import ArrayLike, NDArray
 from scipy.stats import maxwell  # type: ignore
 
 from src._distributions._distribution import _Distribution
