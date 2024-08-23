@@ -1,8 +1,8 @@
 import unittest
 
 import numpy as np
-from numpy.typing import NDArray
 from numpy.testing import assert_allclose
+from numpy.typing import NDArray
 
 from src.cost.exponential_cost import ExponentialCost
 

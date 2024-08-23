@@ -3,10 +3,9 @@ import unittest
 import numpy as np
 from numpy.testing import assert_allclose
 from numpy.typing import NDArray
+from scipy.stats import gamma  # type: ignore
 
 from src.distributions import UnivariateGammaDistribution
-
-from scipy.stats import gamma  # type: ignore
 
 
 class TestUnivariateGamma(unittest.TestCase):
