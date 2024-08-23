@@ -1,10 +1,10 @@
 import numpy as np
 from numpy.typing import NDArray
 
-from src.cost_function import CostFunction
+from src._costs._cost_function import _CostFunction
 
 
-class QuadraticCost(CostFunction):
+class _QuadraticCost(_CostFunction):
     def __init__(self, struct_params: NDArray) -> None:
         """
         Takes as input the (n, 3) array of structural parameters

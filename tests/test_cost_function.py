@@ -2,10 +2,10 @@ import unittest
 
 import numpy as np
 
-from src.cost_function import CostFunction
+from src._costs._cost_function import _CostFunction
 
 
-class BlankCostFunction(CostFunction):
+class BlankCostFunction(_CostFunction):
     pass
 
 

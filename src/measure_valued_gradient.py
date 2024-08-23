@@ -1,8 +1,8 @@
 import numpy as np
 from numpy.typing import NDArray
 
+from src._costs._cost_function import _CostFunction
 from src._distributions._distribution import _Distribution
-from src.cost_function import CostFunction
 from src.distributions import *
 from src.enums import DistributionType
 from src.gradient.gradient import Gradient
@@ -10,7 +10,7 @@ from src.helper_functions import get_distribution_from_type
 
 
 class MeasureValuedGradient:
-    def __init__(self, cost: CostFunction, dist_type: DistributionType) -> None:
+    def __init__(self, cost: _CostFunction, dist_type: DistributionType) -> None:
         """
         Creates the measure-valued gradient object. Lightweight class
         used to evaluate gradients of an objective function using
@@ -18,7 +18,7 @@ class MeasureValuedGradient:
         :param CostFunction cost: Derived class with parent CostFunction
         :param DistributionType dist: Derived class with parent Distribution
         """
-        self.cost: CostFunction = cost
+        self.cost: _CostFunction = cost
         self.dist_type: DistributionType = dist_type
         # TODO: This member variable may not be needed
         self.dist: _Distribution = get_distribution_from_type(self.dist_type)
