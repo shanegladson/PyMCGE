@@ -4,7 +4,7 @@ import numpy as np
 from numpy.testing import assert_allclose
 from numpy.typing import NDArray
 
-from src.cost.exponential_cost import ExponentialCost
+from src.costs import ExponentialCost
 
 
 class TestExponentialCost(unittest.TestCase):

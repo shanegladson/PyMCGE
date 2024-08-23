@@ -4,7 +4,7 @@ import numpy as np
 from numpy.testing import assert_allclose
 from numpy.typing import NDArray
 
-from src.cost.cos_cost import CosineCost
+from src.costs import CosineCost
 
 
 class TestCosineCost(unittest.TestCase):

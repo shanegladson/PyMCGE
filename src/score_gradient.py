@@ -3,15 +3,15 @@ from functools import partial
 import numpy as np
 from numpy.typing import NDArray
 
+from src._costs._cost_function import _CostFunction
 from src._distributions._distribution import _Distribution
-from src.cost_function import CostFunction
 from src.enums import ControlVariate, DistributionType
 from src.gradient.gradient import Gradient
 from src.helper_functions import get_distribution_from_type
 
 
 class ScoreGradient:
-    def __init__(self, cost: CostFunction, dist_type: DistributionType) -> None:
+    def __init__(self, cost: _CostFunction, dist_type: DistributionType) -> None:
         """
         Creates the score gradient object. Lightweight class used to
         evaluate gradients of an objective function using the score
@@ -19,7 +19,7 @@ class ScoreGradient:
         :param CostFunction cost: Derived class with parent CostFunction
         :param dist: Derived class with parent Distribution
         """
-        self.cost: CostFunction = cost
+        self.cost: _CostFunction = cost
         self.dist_type: DistributionType = dist_type
         self.dist: _Distribution = get_distribution_from_type(self.dist_type)
 

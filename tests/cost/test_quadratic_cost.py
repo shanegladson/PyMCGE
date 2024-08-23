@@ -4,7 +4,7 @@ import numpy as np
 from numpy.testing import assert_allclose
 from numpy.typing import NDArray
 
-from src.cost.quadratic_cost import QuadraticCost
+from src.costs import QuadraticCost
 
 
 class TestQuadraticCost(unittest.TestCase):

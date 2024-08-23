@@ -4,7 +4,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 
-class CostFunction(ABC):
+class _CostFunction(ABC):
     def __init__(self, struct_params: NDArray[np.float64]) -> None:
         self.struct_params: NDArray[np.float64] = struct_params
 

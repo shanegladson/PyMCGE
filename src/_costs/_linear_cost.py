@@ -1,10 +1,10 @@
 import numpy as np
 from numpy.typing import NDArray
 
-from src.cost_function import CostFunction
+from src._costs._cost_function import _CostFunction
 
 
-class LinearCost(CostFunction):
+class _LinearCost(_CostFunction):
     def __init__(self, struct_params: NDArray[np.float64]) -> None:
         """
         Takes as input the coefficients and intercepts for the cost.
