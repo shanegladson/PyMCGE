@@ -9,18 +9,21 @@ from src._distributions._univariate_exponential import _UnivariateExponentialDis
 class UnivariateUniformDistribution(_UnivariateUniformDistribution):
     pass
 
+
 class UnivariateNormalDistribution(_UnivariateNormalDistribution):
     pass
+
 
 class UnivariateDSMaxwellDistribution(_UnivariateDSMaxwellDistribution):
     pass
 
+
 class UnivariateWeibullDistribution(_UnivariateWeibullDistribution):
     pass
+
 
 class UnivariateGammaDistribution(_UnivariateGammaDistribution):
     pass
 
 class UnivariateExponentialDistribution(_UnivariateExponentialDistribution):
     pass
-

@@ -21,5 +21,5 @@ class TestDistribution(unittest.TestCase):
             BlankDistribution.eval_grad_log(np.zeros(1), np.zeros(1))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

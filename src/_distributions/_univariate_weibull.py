@@ -5,7 +5,6 @@ from src._distributions._distribution import _Distribution
 
 
 class _UnivariateWeibullDistribution(_Distribution):
-    
     @staticmethod
     def eval_density(x: NDArray[np.float64], struct_params: NDArray[np.float64]) -> np.float64:
         """
@@ -23,7 +22,7 @@ class _UnivariateWeibullDistribution(_Distribution):
         density: np.float64 = alpha * beta * np.power(x_i, alpha - 1) * exp_term
 
         return np.float64(density)
-    
+
     @staticmethod
     def eval_grad_log(x: NDArray[np.float64], struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
         """
@@ -36,14 +35,14 @@ class _UnivariateWeibullDistribution(_Distribution):
         x_i: np.float64 = np.float64(x[0])
         alpha, beta = _UnivariateWeibullDistribution.get_parameters(struct_params)
 
-        dpdalpha = 1. / alpha + np.log(x_i) - alpha * beta * np.power(x_i, alpha - 1.)
-        dpdbeta = 1. / beta - np.power(x_i, alpha)
+        dpdalpha = 1.0 / alpha + np.log(x_i) - alpha * beta * np.power(x_i, alpha - 1.0)
+        dpdbeta = 1.0 / beta - np.power(x_i, alpha)
 
         return np.array([dpdalpha, dpdbeta], dtype=np.float64)
 
     @staticmethod
     def generate_initial_guess() -> NDArray[np.float64]:
-        return np.array([1., 1.], dtype=np.float64)
+        return np.array([1.0, 1.0], dtype=np.float64)
 
     @staticmethod
     def generate_samples(shape: ArrayLike, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
@@ -60,4 +59,3 @@ class _UnivariateWeibullDistribution(_Distribution):
         alpha: np.float64 = np.float64(struct_params[0])
         beta: np.float64 = np.float64(struct_params[1])
         return alpha, beta
-

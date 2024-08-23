@@ -5,7 +5,6 @@ from src._distributions._distribution import _Distribution
 
 
 class _UnivariateNormalDistribution(_Distribution):
-    
     @staticmethod
     def eval_density(x: NDArray[np.float64], struct_params: NDArray[np.float64]) -> np.float64:
         """
@@ -31,15 +30,15 @@ class _UnivariateNormalDistribution(_Distribution):
         """
         x_i: np.float64 = np.float64(x[0])
         mu, sigma_sq = _UnivariateNormalDistribution.get_parameters(struct_params)
-        
+
         dpdmu = (x_i - mu) / sigma_sq
-        dpdsigma_sq = -0.5 / sigma_sq + 0.5 / (sigma_sq ** 2) * (x_i - mu) ** 2
+        dpdsigma_sq = -0.5 / sigma_sq + 0.5 / (sigma_sq**2) * (x_i - mu) ** 2
 
         return np.array([dpdmu, dpdsigma_sq], dtype=np.float64)
 
     @staticmethod
     def generate_initial_guess() -> NDArray[np.float64]:
-        return np.array([0., 1.], dtype=np.float64)
+        return np.array([0.0, 1.0], dtype=np.float64)
 
     @staticmethod
     def generate_samples(shape: ArrayLike, struct_params: NDArray[np.float64]) -> NDArray[np.float64]:
@@ -56,4 +55,3 @@ class _UnivariateNormalDistribution(_Distribution):
         mu: np.float64 = np.float64(struct_params[0])
         sigma_sq: np.float64 = np.float64(struct_params[1])
         return mu, sigma_sq
-

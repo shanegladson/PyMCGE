@@ -11,8 +11,8 @@ class ExponentialCost(CostFunction):
         :param NDArray[np.float64] struct_params: (n, 2) array of structural parameters
         """
         super().__init__(struct_params)
-        self.coeff:NDArray[np.float64] = struct_params
-    
+        self.coeff: NDArray[np.float64] = struct_params
+
     def eval_cost(self, x: NDArray[np.float64]) -> np.float64:
         """
         Evaluates the cost as exp(ax). If x is an array, the sum of each
@@ -30,4 +30,3 @@ class ExponentialCost(CostFunction):
         :return: Gradient of cost for each element in x
         """
         return np.asarray(self.coeff * np.exp(self.coeff * x), dtype=np.float64)
-        
