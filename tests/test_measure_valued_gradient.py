@@ -69,4 +69,5 @@ class TestMeasureValuedGradient(unittest.TestCase):
         mc_gradient: Gradient = self.measure_grad.mc_grad_estimate_from_dist(10, self.distparams1)
         self.assertIsNotNone(mc_gradient)
         self.assertEqual(mc_gradient.gradient.size, 2)
+        self.assertEqual(mc_gradient.variance.size, 2)
         self.assertEqual(mc_gradient.n_samples, 10)
