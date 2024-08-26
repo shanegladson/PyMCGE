@@ -37,6 +37,7 @@ class TestScoreGradient(unittest.TestCase):
         mc_gradient: Gradient = self.score_grad.mc_grad_estimate_from_dist(100000, self.distparams1)
         self.assertIsNotNone(mc_gradient.gradient)
         self.assertEqual(mc_gradient.gradient.size, 2)
+        self.assertEqual(mc_gradient.n_samples, 100000)
 
     def test_score_gradient_monte_carlo_cv(self) -> None:
         cv_gradient: Gradient = self.score_grad.mc_grad_estimate_from_dist(1000, self.distparams1, 10.0)
