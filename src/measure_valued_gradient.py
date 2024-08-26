@@ -102,6 +102,16 @@ class MeasureValuedGradient(GradientEstimator):
                 neg_samp = UnivariateGammaDistribution.generate_samples([n_samp], neg_gamma_params)
 
                 return pos_samp, neg_samp
+            case DistributionType.POISSON:
+                lmda = UnivariatePoissonDistribution.get_parameters(dist_params)
+
+                exp_params = np.array([lmda], dtype=np.float64)
+                pos_samp = UnivariatePoissonDistribution.generate_samples([n_samp], exp_params)
+
+                erl_params = np.array([2.0, lmda], dtype=np.float64)
+                neg_samp = UnivariateGammaDistribution.generate_samples([n_samp], erl_params)
+
+                return pos_samp, neg_samp
             case _:
                 raise NotImplementedError("Not currently supported!")
 
