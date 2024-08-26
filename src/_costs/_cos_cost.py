@@ -1,3 +1,5 @@
+from typing import Final
+
 import numpy as np
 from numpy.typing import NDArray
 
@@ -11,8 +13,8 @@ class _CosineCost(_CostFunction):
         :param NDArray[np.float64] struct_params: (n, 2) array of structural parameters
         """
         super().__init__(struct_params)
-        self.coeff: NDArray[np.float64] = struct_params[0]
-        self.offset: NDArray[np.float64] = struct_params[1]
+        self.coeff: Final[NDArray[np.float64]] = struct_params[0]
+        self.offset: Final[NDArray[np.float64]] = struct_params[1]
 
     def eval_cost(self, x: NDArray[np.float64]) -> np.float64:
         """

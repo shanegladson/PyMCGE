@@ -1,3 +1,5 @@
+from typing import Final
+
 import numpy as np
 from numpy.typing import NDArray
 
@@ -11,7 +13,7 @@ class _ExponentialCost(_CostFunction):
         :param NDArray[np.float64] struct_params: (n, 2) array of structural parameters
         """
         super().__init__(struct_params)
-        self.coeff: NDArray[np.float64] = struct_params
+        self.coeff: Final[NDArray[np.float64]] = struct_params
 
     def eval_cost(self, x: NDArray[np.float64]) -> np.float64:
         """

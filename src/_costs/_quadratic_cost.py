@@ -1,3 +1,5 @@
+from typing import Final
+
 import numpy as np
 from numpy.typing import NDArray
 
@@ -10,9 +12,9 @@ class _QuadraticCost(_CostFunction):
         Takes as input the (n, 3) array of structural parameters
         :params NDArray struct_params: (3, n) or (3, 1) array of structural parameters
         """
-        self.a = struct_params[0]
-        self.b = struct_params[1]
-        self.c = struct_params[2]
+        self.a: Final[NDArray[np.float64]] = struct_params[0]
+        self.b: Final[NDArray[np.float64]] = struct_params[1]
+        self.c: Final[NDArray[np.float64]] = struct_params[2]
 
     def eval_cost(self, x: NDArray) -> np.float64:
         """
