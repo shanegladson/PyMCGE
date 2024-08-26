@@ -14,5 +14,5 @@ class Gradient:
         if not isinstance(self.gradient, np.ndarray):
             raise TypeError("Gradient must be of type NDArray[np.float64]!")
 
-        if not isinstance(self.variance, np.ndarray):
+        if self.variance is not None and not isinstance(self.variance, np.ndarray):
             raise TypeError("Variance must be of type NDArray[np.float64]!")

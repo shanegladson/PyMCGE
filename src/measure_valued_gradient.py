@@ -39,21 +39,25 @@ class MeasureValuedGradient(GradientEstimator):
             )
             const_mu, const_sigma_sq = self._get_mvg_constant(dist_params)
 
-            pos_cost_mu: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=pos_samp_mu)
-            neg_cost_mu: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=neg_samp_mu)
+            pos_cost_mu: NDArray[np.float64] = np.apply_along_axis(
+                self.cost.eval_cost, axis=1, arr=pos_samp_mu[:, np.newaxis]
+            )
+            neg_cost_mu: NDArray[np.float64] = np.apply_along_axis(
+                self.cost.eval_cost, axis=1, arr=neg_samp_mu[:, np.newaxis]
+            )
 
             pos_cost_sigma_sq: NDArray[np.float64] = np.apply_along_axis(
-                self.cost.eval_cost, axis=1, arr=pos_samp_sigma_sq
+                self.cost.eval_cost, axis=1, arr=pos_samp_sigma_sq[:, np.newaxis]
             )
             neg_cost_sigma_sq: NDArray[np.float64] = np.apply_along_axis(
-                self.cost.eval_cost, axis=1, arr=neg_samp_sigma_sq
+                self.cost.eval_cost, axis=1, arr=neg_samp_sigma_sq[:, np.newaxis]
             )
 
-            gradient_estimate_mu = const_mu * np.mean(pos_cost_mu - neg_cost_mu, axis=0)
-            gradient_estimate_sigma_sq = const_sigma_sq * np.mean(pos_cost_sigma_sq - neg_cost_sigma_sq, axis=0)
+            gradient_estimate_mu = const_mu * np.mean(pos_cost_mu - neg_cost_mu)
+            gradient_estimate_sigma_sq = const_sigma_sq * np.mean(pos_cost_sigma_sq - neg_cost_sigma_sq)
             gradient_estimate = np.array([gradient_estimate_mu, gradient_estimate_sigma_sq], dtype=np.float64)
 
-        return Gradient(gradient_estimate)
+        return Gradient(gradient_estimate, n_samples=n_samp)
 
     def _generate_mvg_samples(self, n_samp: int, dist_params: NDArray[np.float64]) -> tuple[NDArray[np.float64], ...]:
         """
