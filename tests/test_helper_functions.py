@@ -1,24 +1,25 @@
 import unittest
 
+import pytest
+
 from src.distributions import *
 from src.enums import DistributionType
 from src.helper_functions import get_distribution_from_type
 
 
-class TestDistributionFromType(unittest.TestCase):
-    def test_distribution_from_type(self) -> None:
-        # Uniform distribution
-        unif_dist = get_distribution_from_type(DistributionType.UNIFORM)
-        self.assertIsInstance(unif_dist, UnivariateUniformDistribution)
+def test_distribution_from_type() -> None:
+    # Uniform distribution
+    unif_dist = get_distribution_from_type(DistributionType.UNIFORM)
+    assert isinstance(unif_dist, UnivariateUniformDistribution)
 
-        # Uniform distribution
-        norm_dist = get_distribution_from_type(DistributionType.NORMAL)
-        self.assertIsInstance(norm_dist, UnivariateNormalDistribution)
+    # Uniform distribution
+    norm_dist = get_distribution_from_type(DistributionType.NORMAL)
+    assert isinstance(norm_dist, UnivariateNormalDistribution)
 
-        # Uniform distribution
-        maxw_dist = get_distribution_from_type(DistributionType.MAXWELL)
-        self.assertIsInstance(maxw_dist, UnivariateDSMaxwellDistribution)
+    # Uniform distribution
+    maxw_dist = get_distribution_from_type(DistributionType.MAXWELL)
+    assert isinstance(maxw_dist, UnivariateDSMaxwellDistribution)
 
-        # Weibull distribution
-        weib_dist = get_distribution_from_type(DistributionType.WEIBULL)
-        self.assertIsInstance(weib_dist, UnivariateWeibullDistribution)
+    # Weibull distribution
+    weib_dist = get_distribution_from_type(DistributionType.WEIBULL)
+    assert isinstance(weib_dist, UnivariateWeibullDistribution)
