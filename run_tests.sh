@@ -19,7 +19,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Running unit tests..."
-python -m unittest discover -s tests
+pytest
 
 # Check the exit code of the test run
 if [ $? -ne 0 ]; then
