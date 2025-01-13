@@ -4,7 +4,10 @@ from numpy.typing import NDArray
 
 class Gradient:
     def __init__(
-        self, gradient: NDArray[np.float64], variance: NDArray[np.float64] | None = None, n_samples: int | None = None
+        self,
+        gradient: NDArray[np.float64],
+        variance: NDArray[np.float64] | None = None,
+        n_samples: int | None = None,
     ) -> None:
         self.__gradient: NDArray[np.float64]
         self.__variance: NDArray[np.float64]

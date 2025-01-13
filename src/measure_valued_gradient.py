@@ -2,7 +2,13 @@ import numpy as np
 from numpy.typing import NDArray
 
 from src._costs._cost_function import _CostFunction
-from src.distributions import *
+from src.distributions import (
+    UnivariateDSMaxwellDistribution,
+    UnivariateGammaDistribution,
+    UnivariateNormalDistribution,
+    UnivariatePoissonDistribution,
+    UnivariateWeibullDistribution,
+)
 from src.enums import DistributionType
 from src.gradient.gradient import Gradient
 from src.gradient_estimator import GradientEstimator

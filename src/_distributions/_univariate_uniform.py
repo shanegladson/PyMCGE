@@ -58,7 +58,7 @@ class _UnivariateUniformDistribution(_Distribution):
             dlogpdb = -np.power(b - a, -1)
             return np.array([dlogpda, dlogpdb], dtype=np.float64)
         else:
-            return np.array([np.NAN, np.NAN], dtype=np.float64)
+            return np.array([np.nan, np.nan], dtype=np.float64)
 
     @staticmethod
     def generate_initial_guess() -> NDArray[np.float64]:

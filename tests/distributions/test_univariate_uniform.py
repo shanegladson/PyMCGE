@@ -56,11 +56,11 @@ def test_uniform_log_grad() -> None:
     assert_allclose(log_grad2, true_log_grad2)
 
     log_grad3: NDArray[np.float64] = UnivariateUniformDistribution.eval_grad_log(x2, params1)
-    true_log_grad3: NDArray[np.float64] = np.array([np.NAN, np.NAN], dtype=np.float64)
+    true_log_grad3: NDArray[np.float64] = np.array([np.nan, np.nan], dtype=np.float64)
     assert_allclose(log_grad3, true_log_grad3)
 
     log_grad4: NDArray[np.float64] = UnivariateUniformDistribution.eval_grad_log(x2, params2)
-    true_log_grad4: NDArray[np.float64] = np.array([np.NAN, np.NAN], dtype=np.float64)
+    true_log_grad4: NDArray[np.float64] = np.array([np.nan, np.nan], dtype=np.float64)
     assert_allclose(log_grad4, true_log_grad4)
 
 
