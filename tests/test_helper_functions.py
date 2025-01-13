@@ -1,6 +1,9 @@
-import pytest
-
-from src.distributions import *
+from src.distributions import (
+    UnivariateDSMaxwellDistribution,
+    UnivariateNormalDistribution,
+    UnivariateUniformDistribution,
+    UnivariateWeibullDistribution,
+)
 from src.enums import DistributionType
 from src.helper_functions import get_distribution_from_type
 

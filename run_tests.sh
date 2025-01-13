@@ -7,15 +7,15 @@ echo "Organizing imports..."
 isort .
 if [ $? -ne 0 ]; then
 	echo "Formatting with isort failed!"
-	exit 1 
+	exit 1
 fi
 
 echo "Running auto formatter..."
 # Auto format the code
-black src tests --line-length 120
+ruff format src tests --line-length 120
 if [ $? -ne 0 ]; then
-	echo "Formatting with black failed!"
-	exit 1 
+	echo "Formatting with ruff failed!"
+	exit 1
 fi
 
 echo "Running unit tests..."
@@ -36,5 +36,13 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "All checks passed successfully!"
+echo "Checking code with ruff..."
+ruff check .
 
+# Check code with ruff
+if [ $? -ne 0 ]; then
+    echo "Code check failed!"
+    exit 1
+fi
+
+echo "All checks passed successfully!"

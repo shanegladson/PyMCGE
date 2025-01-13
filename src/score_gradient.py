@@ -30,7 +30,10 @@ class ScoreGradient(GradientEstimator):
         return self.cost.eval_cost(x) * self.dist.eval_density(x, dist_params) * self.dist.eval_grad_log(x, dist_params)
 
     def mc_grad_estimate_from_dist(
-        self, n_samp: int, dist_params: NDArray[np.float64], beta: ControlVariate | float = ControlVariate.NONE
+        self,
+        n_samp: int,
+        dist_params: NDArray[np.float64],
+        beta: ControlVariate | float = ControlVariate.NONE,
     ) -> Gradient:
         """
         Uses traditional Monte Carlo to estimate the gradient of the
@@ -45,7 +48,9 @@ class ScoreGradient(GradientEstimator):
             samples = samples[:, np.newaxis]
 
         grad_log: NDArray[np.float64] = np.apply_along_axis(
-            partial(self.dist.eval_grad_log, struct_params=dist_params), axis=1, arr=samples
+            partial(self.dist.eval_grad_log, struct_params=dist_params),
+            axis=1,
+            arr=samples,
         )
 
         cost: NDArray[np.float64] = np.apply_along_axis(self.cost.eval_cost, axis=1, arr=samples)

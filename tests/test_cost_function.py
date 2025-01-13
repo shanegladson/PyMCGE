@@ -12,7 +12,6 @@ cost: BlankCostFunction = BlankCostFunction(np.zeros(1))
 
 
 def test_not_implemented() -> None:
-
     with pytest.raises(NotImplementedError):
         cost.eval_cost(np.zeros(1))
 
